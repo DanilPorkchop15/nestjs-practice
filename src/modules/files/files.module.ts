@@ -9,13 +9,15 @@ import { diskStorage } from 'multer';
 @Module({
   imports: [
     TypeOrmModule.forFeature([File]),
-    MulterModule.register({
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const filename = `${Date.now()}-${file.originalname}`;
-          cb(null, filename);
-        },
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        storage: diskStorage({
+          destination: './uploads',
+          filename: (req, file, cb) => {
+            const filename = `${Date.now()}-${file.originalname}`;
+            cb(null, filename);
+          },
+        }),
       }),
     }),
   ],

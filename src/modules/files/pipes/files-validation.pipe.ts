@@ -1,33 +1,27 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-
-enum ALLOWED_MIME_TYPES {
-  JPEG = 'image/jpeg',
-  PNG = 'image/png',
-  PDF = 'application/pdf',
-  ZIP = 'application/zip',
-  DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  PPTX = 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-}
+import { AllowedMimeTypes } from '../types/files.types';
 
 @Injectable()
 export class FilesValidationPipe
   implements PipeTransform<Express.Multer.File, Express.Multer.File>
 {
+  private readonly allowedMimeTypes = Object.values(AllowedMimeTypes);
+
   transform(value: Express.Multer.File): Express.Multer.File {
     if (!value) {
-      throw new BadRequestException('no file uploaded');
+      throw new BadRequestException('No file was uploaded');
     }
-    if (
-      !Object.values(ALLOWED_MIME_TYPES).includes(
-        value.mimetype as ALLOWED_MIME_TYPES,
-      )
-    ) {
-      throw new BadRequestException('Invalid file type');
+
+    if (!this.allowedMimeTypes.includes(value.mimetype as AllowedMimeTypes)) {
+      throw new BadRequestException(
+        `Invalid file type. Only ${this.allowedMimeTypes.join(', ')} are allowed`,
+      );
     }
 
     if (value.size > 5 * 1024 * 1024) {
-      throw new BadRequestException('File is too large');
+      throw new BadRequestException(
+        'File is too large. Maximum allowed size is 5MB',
+      );
     }
 
     return value;

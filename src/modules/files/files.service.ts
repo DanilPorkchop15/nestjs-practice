@@ -52,11 +52,6 @@ export class FilesService {
   }
 
   upload(file: Express.Multer.File) {
-    return this.fileRepository.save({
-      name: file.originalname,
-      path: file.path,
-      size: file.size,
-      type: file.mimetype,
-    });
+    return this.fileRepository.save(file);
   }
 }
