@@ -20,8 +20,12 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  findOne(uuid: string) {
-    return this.userRepository.findOneBy({ uuid });
+  async findOne(uuid: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({ where: { uuid } });
+    if (!user) {
+      return null;
+    }
+    return user;
   }
 
   update(uuid: string, updateUserDto: UpdateUserDto) {
