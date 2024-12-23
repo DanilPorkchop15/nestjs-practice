@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,8 +20,8 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Get()
-  findAll() {
-    return this.filesService.findAll();
+  findAll(@Query('user_id') userId?: string) {
+    return this.filesService.findAll(userId);
   }
 
   @Get(':id')
@@ -42,7 +43,8 @@ export class FilesController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @UploadedFile(new FilesValidationPipe()) file: Express.Multer.File,
+    @Query('user_id') userId: string,
   ) {
-    return this.filesService.upload(file);
+    return this.filesService.upload(file, userId);
   }
 }

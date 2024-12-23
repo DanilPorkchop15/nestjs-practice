@@ -14,4 +14,7 @@ export class CreateFileDto {
 
   @IsOptional()
   type: string;
+
+  @IsNotEmpty()
+  userId: string;
 }

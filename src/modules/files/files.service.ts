@@ -17,8 +17,10 @@ export class FilesService {
     private readonly fileRepository: Repository<File>,
   ) {}
 
-  findAll() {
-    return this.fileRepository.find();
+  findAll(userId?: string) {
+    return this.fileRepository.find({
+      where: { user: { uuid: userId } },
+    });
   }
 
   async findOne(uuid: string) {
@@ -51,7 +53,13 @@ export class FilesService {
     return true;
   }
 
-  upload(file: Express.Multer.File) {
-    return this.fileRepository.save(file);
+  upload(file: Express.Multer.File, userId: string) {
+    return this.fileRepository.save({
+      name: file.originalname,
+      path: file.path,
+      size: file.size,
+      type: file.mimetype,
+      user: { uuid: userId },
+    });
   }
 }

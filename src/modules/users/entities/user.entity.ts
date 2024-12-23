@@ -2,13 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from 'src/modules/users/entities/user.entity';
+import { File } from 'src/modules/files/entities/file.entity';
 
 @Entity()
-export class File {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
@@ -16,13 +16,10 @@ export class File {
   name: string;
 
   @Column()
-  path: string;
+  email: string;
 
   @Column()
-  size: number;
-
-  @Column()
-  type: string;
+  password: string;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP', update: false })
   created_at: Date;
@@ -30,7 +27,7 @@ export class File {
   @Column({ default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @ManyToOne(() => User, (user) => user.files)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @JoinColumn({ name: 'uuid' })
+  @OneToMany(() => File, (file) => file.user)
+  files: File[];
 }
