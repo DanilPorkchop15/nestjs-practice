@@ -31,4 +31,8 @@ export class UsersService {
   remove(uuid: string) {
     return this.userRepository.delete(uuid);
   }
+
+  findByEmail(email: string) {
+    return this.userRepository.findOneBy({ email });
+  }
 }

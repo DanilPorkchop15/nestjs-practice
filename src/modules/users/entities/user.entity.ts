@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -12,10 +13,11 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @Column()
-  name: string;
+  @Column({ nullable: true })
+  name: string | null;
 
-  @Column()
+  @Column({ unique: true })
+  @Index()
   email: string;
 
   @Column()
@@ -28,6 +30,8 @@ export class User {
   updated_at: Date;
 
   @JoinColumn({ name: 'uuid' })
-  @OneToMany(() => File, (file) => file.user)
+  @OneToMany(() => File, (file) => file.user, {
+    cascade: true,
+  })
   files: File[];
 }

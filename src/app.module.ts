@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FilesModule } from './modules/files/files.module';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,12 +24,13 @@ import { UsersModule } from './modules/users/users.module';
         database: config.get<string>('POSTGRES_DB'),
         autoLoadEntities: true,
         synchronize: true,
-        logging: true,
+        logging: ['query', 'error'],
         logger: 'advanced-console',
       }),
     }),
     FilesModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
